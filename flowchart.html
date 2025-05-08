@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glasses Overlay Application Flowchart</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true
+            }
+        });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .download-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            background-color: #4ADE80;
+            color: black;
+            font-weight: bold;
+            border: 2px solid black;
+            box-shadow: 4px 4px 0 black;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+        }
+
+        .download-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 black;
+        }
+
+        .download-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Glasses Overlay Application Flowchart</h1>
+        
+        <div class="mermaid">
+            flowchart TD
+                Start[Application Start] --> LoadLib[Load Face API Libraries]
+                LoadLib --> StartVideo[Start Video Stream]
+                
+                subgraph Initialization
+                    StartVideo --> SetupCanvas[Setup Canvas Overlay]
+                    SetupCanvas --> LoadGlasses[Load Initial Glasses Image]
+                    LoadGlasses --> StartDetection[Start Face Detection Loop]
+                end
+                
+                subgraph DetectionLoop[Detection Loop]
+                    StartDetection --> FaceDetect{Detect Face?}
+                    FaceDetect -->|Yes| GetLandmarks[Get Face Landmarks]
+                    FaceDetect -->|No| Retry[Retry Next Frame]
+                    Retry --> FaceDetect
+                    
+                    GetLandmarks --> CalcEyePos[Calculate Eye Positions]
+                    CalcEyePos --> DrawGlasses[Draw Glasses on Overlay]
+                    DrawGlasses --> NextFrame[Process Next Frame]
+                    NextFrame --> FaceDetect
+                end
+                
+                subgraph UserInteractions[User Interactions]
+                    UserAction{User Action} --> ChangeGlasses[Change Glasses Style]
+                    UserAction --> ChangeFrame[Change Photo Frame]
+                    ChangeGlasses --> LoadNewGlasses[Load New Glasses Image]
+                    LoadNewGlasses --> DetectionLoop
+                    
+                    UserAction --> Capture[Capture Button Pressed]
+                    Capture --> CreateCanvas[Create Capture Canvas]
+                    CreateCanvas --> DrawVideo[Draw Video Frame]
+                    DrawVideo --> DrawOverlay[Draw Glasses Overlay]
+                    DrawOverlay --> ApplyFrame[Apply Photo Frame]
+                    ApplyFrame --> CreateImage[Create Image Element]
+                    CreateImage --> AddToGallery[Add to Image Gallery]
+                    
+                    UserAction --> DeleteImage[Delete Image Button]
+                    DeleteImage --> RemoveFromGallery[Remove from Gallery]
+                end
+                
+                style Start fill:#FFDE59,stroke:#000,stroke-width:3px
+                style UserAction fill:#4ADE80,stroke:#000,stroke-width:3px
+                style FaceDetect fill:#5271FF,stroke:#000,stroke-width:3px
+                style Capture fill:#FF5757,stroke:#000,stroke-width:3px
+        </div>
+
+        <button id="downloadBtn" class="download-btn">Download Flowchart as PNG</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for Mermaid rendering to complete
+            setTimeout(function() {
+                const downloadBtn = document.getElementById('downloadBtn');
+                downloadBtn.addEventListener('click', function() {
+                    // Create a canvas from the SVG
+                    const svgElement = document.querySelector('.mermaid svg');
+                    if (!svgElement) {
+                        alert('Flowchart not ready yet. Please try again in a moment.');
+                        return;
+                    }
+
+                    // Get SVG data
+                    const svgData = new XMLSerializer().serializeToString(svgElement);
+                    
+                    // Create canvas for PNG conversion
+                    const canvas = document.createElement('canvas');
+                    const svgSize = svgElement.getBoundingClientRect();
+                    canvas.width = svgSize.width;
+                    canvas.height = svgSize.height;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Create image from SVG
+                    const img = new Image();
+                    img.onload = function() {
+                        // Draw white background (SVGs can be transparent)
+                        ctx.fillStyle = 'white';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Draw the image on canvas
+                        ctx.drawImage(img, 0, 0);
+                        
+                        // Convert to PNG and download
+                        const pngUrl = canvas.toDataURL('image/png');
+                        
+                        // Create temporary link and trigger download
+                        const link = document.createElement('a');
+                        link.href = pngUrl;
+                        link.download = 'glasses_app_flowchart.png';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    };
+                    
+                    // Load SVG into image
+                    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+                });
+            }, 1000); // Give time for Mermaid to render
+        });
+    </script>
+</body>
+</html>

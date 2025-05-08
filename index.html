@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Real-Time Glasses Overlay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'neo-yellow': '#FFDE59',
+              'neo-pink': '#FF5757',
+              'neo-blue': '#5271FF',
+              'neo-green': '#4ADE80',
+            },
+            boxShadow: {
+              'neo': '5px 5px 0px 0px rgba(0,0,0,1)',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      video,
+      canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .neo-border {
+        border: 3px solid black;
+      }
+      .neo-shadow {
+        box-shadow: 5px 5px 0px 0px rgba(0,0,0,1);
+      }
+      /* Dotted background texture */
+      .bg-dots {
+        background-color: #FFDE59;
+        background-image: radial-gradient(circle, #000 2px, transparent 2px);
+        background-size: 20px 20px;
+        background-position: 0 0;
+      }
+    </style>
+  </head>
+  <body class="bg-dots p-8 min-h-screen flex flex-col items-center">
+    <h1 class="text-4xl font-bold mb-8 neo-border bg-white p-4 neo-shadow z-10 relative">GLASSES OVERLAY</h1>
+    
+    <div class="relative neo-border bg-white p-2 neo-shadow mb-8 z-10">
+      <div class="relative w-[640px] h-[480px]">
+        <video id="video" autoplay muted playsinline class="w-full h-full"></video>
+        <canvas id="overlay" class="w-full h-full"></canvas>
+      </div>
+    </div>
+    
+    <div class="flex gap-4 z-10">
+      <button id="captureBtn" class="bg-neo-pink neo-border py-2 px-4 font-bold neo-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
+        CAPTURE
+      </button>
+      <button id="changeGlassesBtn" class="bg-neo-blue neo-border py-2 px-4 text-white font-bold neo-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
+        CHANGE GLASSES
+      </button>
+    </div>
+    
+    <div id="capturedImages" class="mt-8 grid grid-cols-2 gap-4 w-full max-w-3xl z-10"></div>
+    
+    <!-- Load face-api.js from CDN -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/face-api.js/dist/face-api.min.js"
+    ></script>
+    <script defer src="app.js"></script>
+  </body>
+</html>
