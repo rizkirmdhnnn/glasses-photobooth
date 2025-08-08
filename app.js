@@ -67,7 +67,8 @@ function drawFrame(glassesImg, eyeCenterX, eyeCenterY, glassesWidth, glassesHeig
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Only draw if we have valid positions and a glasses image
-    if (glassesImg && eyeCenterX && eyeCenterY && glassesWidth && glassesHeight) {
+    // Using explicit nullish checks so coordinates at 0 don't skip drawing
+    if (glassesImg && eyeCenterX != null && eyeCenterY != null && glassesWidth && glassesHeight) {
         ctx.save();
         ctx.translate(eyeCenterX, eyeCenterY);
         ctx.rotate(angle || 0);
