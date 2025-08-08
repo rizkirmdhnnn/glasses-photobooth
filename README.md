@@ -6,7 +6,7 @@ Aplikasi ini memungkinkan pengguna untuk mencoba berbagai model kacamata secara 
 
 - **Deteksi Wajah Real-time**: Menggunakan TinyFaceDetector dari face-api.js untuk deteksi wajah yang cepat dan akurat
 - **Penempatan Kacamata Otomatis**: Menggunakan faceLandmark68Net untuk mendeteksi posisi mata dan menempatkan kacamata dengan tepat
-- **9 Pilihan Model Kacamata**: Pengguna dapat berganti antar berbagai model kacamata dengan tombol "CHANGE GLASSES"
+- **9 Pilihan Model Kacamata**: Pengguna dapat berganti antara berbagai model kacamata dengan tombol "CHANGE GLASSES"
 - **Fitur Capture**: Pengguna dapat mengambil gambar dengan kacamata yang terpasang
 - **Galeri Gambar**: Semua gambar yang di-capture tersimpan dalam galeri dan dapat dihapus kapan saja
 - **Tampilan Neobrutalism**: Interface dengan desain neobrutalism yang menarik dan modern
