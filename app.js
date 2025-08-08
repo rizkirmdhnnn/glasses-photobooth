@@ -66,9 +66,15 @@ function getCenterOfPoints(points) {
 function drawFrame(glassesImg, eyeCenterX, eyeCenterY, glassesWidth, glassesHeight, angle) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Only draw if we have valid positions and a glasses image
-    // Using explicit nullish checks so coordinates at 0 don't skip drawing
-    if (glassesImg && eyeCenterX != null && eyeCenterY != null && glassesWidth && glassesHeight) {
+    // Only draw if we have valid numeric positions and dimensions
+    // Coordinates at 0 are valid, so we explicitly check for finite numbers
+    if (
+        glassesImg &&
+        Number.isFinite(eyeCenterX) &&
+        Number.isFinite(eyeCenterY) &&
+        Number.isFinite(glassesWidth) && glassesWidth > 0 &&
+        Number.isFinite(glassesHeight) && glassesHeight > 0
+    ) {
         ctx.save();
         ctx.translate(eyeCenterX, eyeCenterY);
         ctx.rotate(angle || 0);
