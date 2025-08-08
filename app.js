@@ -1,9 +1,15 @@
-const video = document.getElementById('video');
-const canvas = document.getElementById('overlay');
-const ctx = canvas.getContext('2d');
-const captureBtn = document.getElementById('captureBtn');
-const changeGlassesBtn = document.getElementById('changeGlassesBtn');
-const capturedImages = document.getElementById('capturedImages');
+// DOM elements are only available in the browser environment.
+// When running tests in Node, these will remain undefined and can be
+// mocked as needed.
+let video, canvas, ctx, captureBtn, changeGlassesBtn, capturedImages;
+if (typeof document !== 'undefined') {
+    video = document.getElementById('video');
+    canvas = document.getElementById('overlay');
+    ctx = canvas.getContext('2d');
+    captureBtn = document.getElementById('captureBtn');
+    changeGlassesBtn = document.getElementById('changeGlassesBtn');
+    capturedImages = document.getElementById('capturedImages');
+}
 
 // Array of glasses options
 const glassesOptions = [
@@ -21,10 +27,13 @@ const glassesOptions = [
 let currentGlassesIndex = 0;
 let currentGlassesImg = null; // Track the current glasses image
 
-Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri('models'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('models')
-]).then(startVideo);
+// Load models and start the video only when running in the browser
+if (typeof document !== 'undefined') {
+    Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri('models'),
+        faceapi.nets.faceLandmark68Net.loadFromUri('models')
+    ]).then(startVideo);
+}
 
 function startVideo() {
     navigator.mediaDevices.getUserMedia({ video: {} })
@@ -64,11 +73,14 @@ function getCenterOfPoints(points) {
 }
 
 function drawFrame(glassesImg, eyeCenterX, eyeCenterY, glassesWidth, glassesHeight, angle) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+    // ctx and canvas may be mocked in tests. Guard against undefined.
+    if (ctx && canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
     // Only draw if we have valid positions and a glasses image
     // Using explicit nullish checks so coordinates at 0 don't skip drawing
-    if (glassesImg && eyeCenterX != null && eyeCenterY != null && glassesWidth && glassesHeight) {
+    if (ctx && glassesImg && eyeCenterX != null && eyeCenterY != null && glassesWidth && glassesHeight) {
         ctx.save();
         ctx.translate(eyeCenterX, eyeCenterY);
         ctx.rotate(angle || 0);
@@ -131,7 +143,8 @@ function detectFaceAndDraw() {
         });
 }
 
-// Capture current frame
+// Capture current frame only if running in the browser
+if (typeof document !== 'undefined' && captureBtn) {
 captureBtn.addEventListener('click', () => {
     // Create a new canvas to capture the combined video and overlay
     const captureCanvas = document.createElement('canvas');
@@ -173,15 +186,23 @@ captureBtn.addEventListener('click', () => {
         imageContainer.style.transform = 'scale(1)';
     }, 50);
 });
+}
 
 // Change glasses style
+if (typeof document !== 'undefined' && changeGlassesBtn) {
 changeGlassesBtn.addEventListener('click', () => {
     currentGlassesIndex = (currentGlassesIndex + 1) % glassesOptions.length;
     loadGlasses();
-    
+
     // Add animation to button
     changeGlassesBtn.classList.add('translate-x-1', 'translate-y-1', 'shadow-none');
     setTimeout(() => {
         changeGlassesBtn.classList.remove('translate-x-1', 'translate-y-1', 'shadow-none');
     }, 200);
 });
+}
+
+// Export functions for testing in Node environment
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { getCenterOfPoints, drawFrame };
+}

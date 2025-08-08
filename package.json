@@ -1,0 +1,16 @@
+{
+  "name": "glasses-photobooth",
+  "version": "1.0.0",
+  "description": "Aplikasi ini memungkinkan pengguna untuk mencoba berbagai model kacamata secara virtual menggunakan webcam. Aplikasi ini memanfaatkan teknologi deteksi wajah untuk menempatkan kacamata dengan tepat pada wajah pengguna dalam waktu nyata (real-time).",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
