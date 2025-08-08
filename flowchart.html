@@ -87,18 +87,16 @@
                 
                 subgraph UserInteractions[User Interactions]
                     UserAction{User Action} --> ChangeGlasses[Change Glasses Style]
-                    UserAction --> ChangeFrame[Change Photo Frame]
                     ChangeGlasses --> LoadNewGlasses[Load New Glasses Image]
                     LoadNewGlasses --> DetectionLoop
-                    
+
                     UserAction --> Capture[Capture Button Pressed]
                     Capture --> CreateCanvas[Create Capture Canvas]
                     CreateCanvas --> DrawVideo[Draw Video Frame]
                     DrawVideo --> DrawOverlay[Draw Glasses Overlay]
-                    DrawOverlay --> ApplyFrame[Apply Photo Frame]
-                    ApplyFrame --> CreateImage[Create Image Element]
-                    CreateImage --> AddToGallery[Add to Image Gallery]
-                    
+                    DrawOverlay --> PrepareImage[Create Image & Container]
+                    PrepareImage --> AddToGallery[Add to Image Gallery]
+
                     UserAction --> DeleteImage[Delete Image Button]
                     DeleteImage --> RemoveFromGallery[Remove from Gallery]
                 end
